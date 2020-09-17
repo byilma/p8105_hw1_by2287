@@ -11,8 +11,7 @@ library(tidyverse)
 
 ## Problem 1
 
-Create a data frame named 'df' comprised of:
-```{r}
+```{r create data frame}
 df <- tibble(
   vec_numeric = rnorm(10),
   vec_logical = vec_numeric < 0,
@@ -44,8 +43,8 @@ df %>%
 
 ```
 
-The as.numeric function coerces the non-numeric variables in "df" into numeric ones. The logical variable turned to 0 & 1; whereas the factor variable variable truned to 1, 2, & 3; the character variable turned into NAs. This explains what we saw when we took the mean for the non-numeric variables. It appears that R reads the logical values as 0 or 1; and the factor variable variables as 1, 2, & 3 - and thus takes the average of these numbers hen we call the mean() function. 
-```{r}
+The as.numeric function coerces the non-numeric variables into numeric ones. The logical variable turned to 0 & 1; whereas the factor variable variable turned to 1, 2, & 3; the character variable turned into NAs. This partyl explains what we saw when we took the mean for the non-numeric variables. It appears that R reads the logical values as 0 or 1; and thus takes the average of these numbers when we call the mean() function. 
+```{r coerce variables into numeric types}
 as.numeric(df$vec_logical)
 as.numeric(df$vec_character)
 as.numeric(df$vec_factor) 
@@ -53,7 +52,7 @@ as.numeric(df$vec_factor)
 
 
 Converting the logical vector to different variable types and multiplying by the random sample (vec_numeric)
-```{r}
+```{r, convert variables & multiply by the random sample}
 #converting to numeric and multiplying by the random sample
 df$vec_logical <- as.numeric(df$vec_logical)
 pull(df, "vec_logical") * pull(df, "vec_numeric")
@@ -72,20 +71,36 @@ pull(df, "vec_logical") * pull(df, "vec_numeric")
 
 
 ## Problem 2
-```{r}
+```{r, load library & import data}
 library("palmerpenguins")
 data("penguins", package = "palmerpenguins")
 ```
 
 
-**Description of the data set Penguins**
+**Description of the data set _Penguins_**
 
 The data set _penguins_ has `r nrow(penguins)` rows and `r ncol(penguins)` variables, which capture different types of information on penguins, including: `r names(penguins)`. 
 
-The data set captures information on 3 different species of penguins: `r levels(penguins$species)`; across 3 different islands: `r levels(penguins$island)`.
+The data set captures information on 3 different species of penguins: _`r levels(penguins$species)`_; across 3 different islands: _`r levels(penguins$island)`_.
 
-The median bill length of these penguins, not counting missing values, is `r pull(penguins, bill_length_mm) %>% median(na.rm = TRUE)` millimeter; whereas the median bill depth is `r pull(penguins, bill_depth_mm) %>% median(na.rm = TRUE)` millimeter.
+The median bill length of these penguins, not counting missing values, is `r pull(penguins, bill_length_mm) %>% median(na.rm = TRUE)` millimeter; whereas the median bill depth, not counting missing values, is `r pull(penguins, bill_depth_mm) %>% median(na.rm = TRUE)` millimeter.
 
-The average flipper length of these penguins, not counting missing values, is `r pull(penguins, flipper_length_mm) %>% mean(na.rm = TRUE) %>% round(2)` millimeter. 
+The **average flipper length** of these penguins, not counting missing values, is `r pull(penguins, flipper_length_mm) %>% mean(na.rm = TRUE) %>% round(2)` millimeter. 
+
+**Making a Scatter plot**
+```{r scatterplot, warning = FALSE}
+penguins %>% 
+  ggplot(aes(x = bill_length_mm, y = flipper_length_mm)) +   geom_point(aes(color = species)) + 
+  facet_grid(. ~species) + 
+  ggtitle("Scatter Plot: Flipper Length x Bill Length, by Species")
+```
+
+
+```{r include = FALSE}
+ggsave("Scatter_plot.pdf", height = 4, width = 4)
+
+```
+
+
 
 
